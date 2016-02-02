@@ -9,14 +9,15 @@ class Board
     @board = Array.new(n_of_columns){Array.new(n_of_rows,"_")}
   end
 
-  def show_board
+  def show_board(turn)
 
-  	def show_turn
+  	def show_turn(turn)
   	  """prints a line with the turn number and the players turn"""
       if turn % 2 != 0
-        "Player 1's turn, CHOOSE WISELY!"
+        puts "Player 1's turn, CHOOSE WISELY!"
       else
-        "Player 2's turn, CHOOSE WISELY!"
+        puts "Player 2's turn, CHOOSE WISELY!"
+      end
     end
     
   	def show_control
@@ -27,7 +28,7 @@ class Board
     end
     """main method"""
   	i = 0
-  	#show_turn
+  	show_turn(turn)
     show_control
 	  while i < @board.length
 	    print "#{i+1}#{@board[i]}\n"
@@ -36,7 +37,7 @@ class Board
 	"""/main method"""
   end
   
-  def update(turn)
+  def update(turn, move)
 
     def set_controls
     """creates a dictionary to associate empty cases with control options"""
@@ -46,45 +47,113 @@ class Board
       column.each_with_index do |row, i_of_r| 
         if @board[i_of_c][i_of_r] == "_"
           controls["#{i_of_c+1}#{letter.chr}"] = [@board[i_of_c][i_of_r], i_of_c, i_of_r]
-          letter += 1
+          
           end
+        letter += 1
       end
     end
+    print controls
     controls
     end
   
   controls = set_controls.to_h
-	move = gets.chomp
   puts controls.keys
 	if controls.has_key?(move) == true && turn % 2 != 0
     puts 'BON'
 	  @board[controls[move][1]][controls[move][2]] = 'O'
-    show_board
   elsif controls.has_key?(move) == true && turn % 2 == 0
+    puts 'UNI'
     @board[controls[move][1]][controls[move][2]] = 'X'
-    show_board
   else
-		"Sorry, either you did not enter the right the case you chose is already taken"
+		print "Sorry, YOU MISSED YOUR TURN BY ENTERING THE WRONG CASE"
 	end
 
   end
-end
+
 
   def winner?
-    @board.each do |column|
-      if column.all? == 'O' || column.all? == 'X'
-        true
+    def check_rows
+      @board.each_with_index do |row|
+        if row.all?{|i| i == 'O' } || row.all?{|i| i == 'X' }
+          return true
+        end
       end
+    end
+
+    def check_columns
+      column_repository = {}
+      @board.each do |row|
+        row.each_with_index do |i, index|
+        if column_repository[index] == nil 
+          column_repository[index] = [i]  
+        else 
+          column_repository[index].push(i)
+        end
+        end
+      puts "column rep: #{column_repository}"
+      end
+      column_repository.values.each do |column|
+      if column.all?{|i| i == 'O'}  || column.all?{|i| i == 'X'}
+        return true
+        end
+      end
+    end
+
+    def check_diagonals
+      def check_first
+        first_diagonal = []
+        counter = 0
+        @board.each do |row|
+          first_diagonal.push(row[counter])
+          counter += 1
+        end
+        puts "first diagonal: #{first_diagonal}"
+        if first_diagonal.all?{|i| i == 'O'} || first_diagonal.all?{|i| i == 'X'}
+          return true
+        end
+      end
+      def check_second
+        second_diagonal = []
+        counter = -1
+        @board.each do |row|
+          second_diagonal.push(row[counter])
+          counter -= 1
+        end
+        puts "second diagonal: #{second_diagonal}"
+        if second_diagonal.all?{|i| i == 'O' || i == 'X'}
+          return true
+        end
+      end
+    check_first
+    check_second
+    end
+    
+    # def check_tie
+    #   @board.all? do|rows|
+    #     answers = []
+    #     if rows.any?{|i| i =='_'} == false
+    #       answers.push(false)
+    #     end
+        
+    #   end
+    # end
+    #checks if any of the winning or tie conditions are fulfilled
+    if check_rows == true || check_columns == true || check_diagonals == true
+      return true
+    # elsif check_tie == false
+    #   return false
+    else
+      puts 'GAME CONTINUES'
     end
   end
 
-  def winner
+  def winner(turn)
     if turn % 2 != 0
       winner = 1
     else
       winner = 2
-    puts "CONGRATULATIONS PLAYER #{winner}, YOU WON!!!!!"
     end
+    puts "CONGRATULATIONS PLAYER #{winner}, YOU WON!!!!!"
   end
 end
 
