@@ -1,3 +1,5 @@
+require './player'
+
 class Board
   attr_accessor :player
 
@@ -10,7 +12,6 @@ class Board
   end
 
   def show_board(turn)
-
   	def show_turn(turn)
   	  """prints a line with the turn number and the players turn"""
       if turn % 2 != 0
@@ -38,12 +39,13 @@ class Board
   end
   
   def update(turn, move)
-
     def set_controls
     """creates a dictionary to associate empty cases with control options"""
     controls = Hash.new
+
     @board.each_with_index do |column, i_of_c|
       letter = 97
+
       column.each_with_index do |row, i_of_r| 
         if @board[i_of_c][i_of_r] == "_"
           controls["#{i_of_c+1}#{letter.chr}"] = [@board[i_of_c][i_of_r], i_of_c, i_of_r]
@@ -52,10 +54,12 @@ class Board
         letter += 1
       end
     end
+
     controls
-    end
-  
+  end
+
   controls = set_controls.to_h
+
 	if controls.has_key?(move) == true && turn % 2 != 0
     puts 'BON'
 	  @board[controls[move][1]][controls[move][2]] = 'O'
@@ -66,8 +70,7 @@ class Board
 		print "Sorry, YOU MISSED YOUR TURN BY ENTERING THE WRONG CASE"
 	end
 
-  end
-
+end
 
   def winner?
     def check_rows
@@ -108,6 +111,7 @@ class Board
           return true
         end
       end
+
       def check_second
         second_diagonal = []
         counter = -1
@@ -119,6 +123,7 @@ class Board
           return true
         end
       end
+
     check_first
     check_second
     end
@@ -146,14 +151,3 @@ class Board
     puts "CONGRATULATIONS PLAYER #{winner}, YOU WON!!!!!"
   end
 end
-
-
-class Player
-  attr_accessor :name
-	
-  def initialize(name)
-	@name = name
-  end
-end
-
-
