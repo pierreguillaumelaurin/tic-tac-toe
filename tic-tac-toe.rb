@@ -52,12 +52,10 @@ class Board
         letter += 1
       end
     end
-    print controls
     controls
     end
   
   controls = set_controls.to_h
-  puts controls.keys
 	if controls.has_key?(move) == true && turn % 2 != 0
     puts 'BON'
 	  @board[controls[move][1]][controls[move][2]] = 'O'
@@ -90,7 +88,6 @@ class Board
           column_repository[index].push(i)
         end
         end
-      puts "column rep: #{column_repository}"
       end
       column_repository.values.each do |column|
       if column.all?{|i| i == 'O'}  || column.all?{|i| i == 'X'}
@@ -107,7 +104,6 @@ class Board
           first_diagonal.push(row[counter])
           counter += 1
         end
-        puts "first diagonal: #{first_diagonal}"
         if first_diagonal.all?{|i| i == 'O'} || first_diagonal.all?{|i| i == 'X'}
           return true
         end
@@ -119,8 +115,7 @@ class Board
           second_diagonal.push(row[counter])
           counter -= 1
         end
-        puts "second diagonal: #{second_diagonal}"
-        if second_diagonal.all?{|i| i == 'O' || i == 'X'}
+        if second_diagonal.all?{|i| i == 'O'} || second_diagonal.all?{|i| i == 'X'}
           return true
         end
       end
@@ -128,22 +123,17 @@ class Board
     check_second
     end
     
-    # def check_tie
-    #   @board.all? do|rows|
-    #     answers = []
-    #     if rows.any?{|i| i =='_'} == false
-    #       answers.push(false)
-    #     end
-        
-    #   end
-    # end
+    def check_tie
+      if @board.all? {|rows| !rows.any?{|i| i =='_'}}
+        return true
+      end
+    end
+
     #checks if any of the winning or tie conditions are fulfilled
     if check_rows == true || check_columns == true || check_diagonals == true
       return true
-    # elsif check_tie == false
-    #   return false
-    else
-      puts 'GAME CONTINUES'
+    elsif check_tie == true
+      return false
     end
   end
 
